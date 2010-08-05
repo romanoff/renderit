@@ -1,17 +1,25 @@
-= renderit
+== RenderIt
 
-Description goes here.
+Main purpose of this gem was to make easier development of websites using html5/css3. 
+The problem that we have at the moment is that old browsers and ALL stable Internet Explorers don't support html5/css3, but we have to support all the main browsers. 
+To be able to use rounded corners, gradients, css-transformations, application cache and so on we can support two versions of website - one for old browsers and one for new.
+Browser name and browser version will be defined from user_agent that is sent by all the modern browsers.
+User expirience in new browser can be much better comparing to the versions of web applications written to work same under all browsers (including old once).
 
-== Note on Patches/Pull Requests
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+To use this gem you can just install this gem, require it in your rails application and create configuration file conf/renderit.yml
+In this file you can define regular expressions to define browser name and version (if defaults are not enough). By default renderit supports InternetExplorer, Opera, Firefox, Chrome, Safari, SafariMobile.
+Also you can define templates that will be rendered for specific browsers. This templates will be used for rendering views as well as layouts.
+Here is an example of renderit.yml config file:
 
-== Copyright
+templates:                                                                      
+  new: chrome>=4, firefox>=3.5, opera>=10.5
+
+If Chrome>=4 version, Firefox >= 3.5 version or Opera >= 10.5 version browser is used to get page of your rails application, rails will try to render page with '_new' postfix. For example, not 'sample_view' view,
+but 'sample_view_new' view (if it is present). If not - default 'sample_view' view will be rendered. Same thing with layouts. If you have 'application_new' layout - it will be rendered. If not 'application' layout
+will be used. 
+
+In order to use those tempates, default view or layout have to be present. You will not be able to render 'application_new' layout in case you have no 'application' layout.
+
+Have fun :)
 
 Copyright (c) 2010 Andrey Romanov. See LICENSE for details.
