@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "lib/renderit.rb",
+     "renderit.gemspec",
      "test/helper.rb",
      "test/test_renderit.rb"
   ]
