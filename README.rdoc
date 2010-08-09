@@ -20,6 +20,10 @@ will be used.
 
 In order to use those tempates, default view or layout have to be present. You will not be able to render 'application_new' layout in case you have no 'application' layout.
 
-Have fun :)
+== Rails compatibility
+
+In order to use this gem with rails 2.3.*, you just have to put 'config.gem "renderit"' string in config/environment.rb file.
+
+In order to user this gem with rails 3, you have to require 'renderit' gem in Gemfile and create some file (I prefer renderit.rb) in config/initializers folder where 'RenderIt.load_config' line should be present.
 
 Copyright (c) 2010 Andrey Romanov. See LICENSE for details.
