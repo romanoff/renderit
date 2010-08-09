@@ -1,36 +1,3 @@
-class ActionController::Base
-  private
-
-  # default_render method for ActionController::Base is redefined
-  # in order to render views for specific browsers (depending on user_agent)
-  def default_render
-    @renderit_template ||= RenderIt.get_template_name(request)
-    template_path = default_template_name + '_' + @renderit_template
-    if view_paths.find_template(template_path, default_template_format)
-      render template_path
-    end
-  rescue ActionView::MissingTemplate => e
-    render default_template_name
-  end
-
-  # default_layout method for ActionController::Base is redefined
-  # in order to render layouts for specific browsers (depending on user_agent)
-  def default_layout
-    @renderit_template = RenderIt.get_template_name(request)
-    layout = self.class.read_inheritable_attribute(:layout)
-    return layout unless self.class.read_inheritable_attribute(:auto_layout)
-    begin
-      rendered_layout = find_layout(layout+ '_' + @renderit_template, default_template_format)
-    rescue ActionView::MissingTemplate
-    end
-    return rendered_layout if rendered_layout
-    find_layout(layout, default_template_format)
-  rescue ActionView::MissingTemplate
-    nil
-  end
-
-end
-
 class RenderIt
   # Default regular expressions to define browser and its version
   DEFAULT_BROWSERS_CONFIG = {
@@ -123,4 +90,99 @@ class RenderIt
 
 end
 
-RenderIt.load_config
+
+RAILS_THREE_REGEXP = /^3/
+
+if RAILS_THREE_REGEXP =~ Rails.version # If rails version is 3
+
+  module AbstractController
+    module Rendering
+
+      def _normalize_options(options)
+        if options[:partial] == true
+          options[:partial] = action_name
+        end
+        if (options.keys & [:partial, :file, :template]).empty?
+          options[:prefix] ||= _prefix
+        end
+
+        options[:template] ||= (options[:action] || action_name).to_s
+        if (@renderit_template ||= RenderIt.get_template_name(request))
+          begin
+            template_name = options[:template]+'_'+@renderit_template
+            if lookup_context.find_template(template_name, options[:prefix])
+              options[:template] = template_name
+            end
+          rescue ActionView::MissingTemplate => e          
+          end
+        end
+        options
+      end
+
+    end
+
+  end
+
+  module AbstractController
+    module Layouts
+
+      def _normalize_options(options)
+        super
+        if _include_layout?(options)
+          layout = options.key?(:layout) ? options.delete(:layout) : :default
+          value = _layout_for_option(layout)
+          if (value && (@renderit_template ||= RenderIt.get_template_name(request)) )
+            begin
+              template_name = value+'_'+@renderit_template
+              if lookup_context.find_template(template_name, 'layouts')
+                value = template_name
+              end
+            rescue ActionView::MissingTemplate => e
+            end
+          end
+          options[:layout] = (value =~ /\blayouts/ ? value : "layouts/#{value}") if value
+        end
+      end
+
+    end
+  end
+
+
+else # If rails version is 2.3.*
+
+  class ActionController::Base
+    private
+
+    # default_render method for ActionController::Base is redefined
+    # in order to render views for specific browsers (depending on user_agent)
+    def default_render
+      @renderit_template ||= RenderIt.get_template_name(request)
+      template_path = default_template_name + '_' + @renderit_template
+      if view_paths.find_template(template_path, default_template_format)
+        render template_path
+      end
+    rescue ActionView::MissingTemplate => e
+      render default_template_name
+    end
+
+    # default_layout method for ActionController::Base is redefined
+    # in order to render layouts for specific browsers (depending on user_agent)
+    def default_layout
+      @renderit_template = RenderIt.get_template_name(request)
+      layout = self.class.read_inheritable_attribute(:layout)
+      return layout unless self.class.read_inheritable_attribute(:auto_layout)
+      begin
+        rendered_layout = find_layout(layout+ '_' + @renderit_template, default_template_format)
+      rescue ActionView::MissingTemplate
+      end
+      return rendered_layout if rendered_layout
+      find_layout(layout, default_template_format)
+    rescue ActionView::MissingTemplate
+      nil
+    end
+
+  end
+
+  RenderIt.load_config
+
+end

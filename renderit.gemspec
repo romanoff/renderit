@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{renderit}
-  s.version = "0.1.0"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andrey Romanov"]
-  s.date = %q{2010-08-05}
+  s.date = %q{2010-08-09}
   s.description = %q{Renders different templates depending on browser user_agent.}
   s.email = %q{judo.ras@gmail.com}
   s.extra_rdoc_files = [
