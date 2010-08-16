@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{renderit}
-  s.version = "0.2.0"
+  s.version = "0.2.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andrey Romanov"]
-  s.date = %q{2010-08-09}
+  s.date = %q{2010-08-16}
   s.description = %q{Renders different templates depending on browser user_agent.}
   s.email = %q{judo.ras@gmail.com}
   s.extra_rdoc_files = [
@@ -25,8 +25,10 @@ Gem::Specification.new do |s|
      "VERSION",
      "lib/renderit.rb",
      "renderit.gemspec",
-     "test/helper.rb",
-     "test/test_renderit.rb"
+     "spec/config/renderit.yml",
+     "spec/renderit_spec.rb",
+     "spec/spec_helper.rb",
+     "spec/spec_initializer.rb"
   ]
   s.homepage = %q{http://github.com/romanoff/renderit}
   s.rdoc_options = ["--charset=UTF-8"]
@@ -34,8 +36,9 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{Renders different templates depending on browser user_agent.}
   s.test_files = [
-    "test/helper.rb",
-     "test/test_renderit.rb"
+    "spec/spec_helper.rb",
+     "spec/renderit_spec.rb",
+     "spec/spec_initializer.rb"
   ]
 
   if s.respond_to? :specification_version then

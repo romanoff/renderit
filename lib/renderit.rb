@@ -147,6 +147,13 @@ if RAILS_THREE_REGEXP =~ Rails.version # If rails version is 3
     end
   end
 
+ class MyRailtie < Rails::Railtie
+   initializer "renderit_initialization" do
+     RenderIt.load_config
+   end
+ end
+
+
 
 else # If rails version is 2.3.*
 

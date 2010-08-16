@@ -1,4 +1,6 @@
 class Rails
+  class Railtie
+  end
   def self.version
     '3.0.0.RC'
   end
@@ -16,4 +18,7 @@ end
 
 def read_inheritable_attribute(key)
   (@attributes||{})[key]
+end
+
+def initializer(*args)
 end
