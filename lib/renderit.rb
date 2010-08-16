@@ -4,8 +4,8 @@ class RenderIt
     'ie' => 'msie (\d+\.\d).*\)(?!\s*opera)', 
     'firefox' => 'gecko.*?firefox\/(\d+\.\d)', 
     'chrome' => 'applewebkit.*?chrome\/(\d+\.\d)', 
-    'safari' => 'applewebkit.*?version\/(\d+.\d)\.\d(?!\s*mobile).*?safari', 
-    'safarimobile' => 'applewebkit.*?version\/(\d+.\d)\.\d\smobile.*?safari', 
+    'safari' => 'applewebkit.*?version\/(\d+.\d)(?![.\d\s]*mobile)',    
+    'safarimobile' => 'applewebkit.*?version\/(\d+.\d)[.\d\s]*mobile.*?safari', 
     'opera' => 'opera.*?version\/(\d+\.\d)' 
   }
   VERSION_MATCH_REGEXP = Regexp.new("([a-z]+)(.*)", "i")
@@ -36,6 +36,7 @@ class RenderIt
         return Browser.new(browser_name, version[1])
       end
     end
+    nil
   end
 
 
@@ -58,7 +59,6 @@ class RenderIt
   def self.load_config
     if File.exist?(File.join(Rails.root, 'config/renderit.yml'))
       renderit_config = YAML::load_file(File.join(Rails.root, 'config/renderit.yml'))
-      
       #Loading browsers config
       browsers_config = renderit_config['browsers']||{}
       browsers_config.merge!(DEFAULT_BROWSERS_CONFIG)
@@ -85,7 +85,7 @@ class RenderIt
 
       write_inheritable_attribute(:templates_config, templates_config)
     end
-
+    true
   end
 
 end
